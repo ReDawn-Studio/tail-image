@@ -1,0 +1,7 @@
+.textWrapper {
+  width: 600px;
+  padding: 24px;
+}
+.text {
+  color: rgb(var(--foreground-rgb));
+}

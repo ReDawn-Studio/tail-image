@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
+  padding: 2rem;
   min-height: 100vh;
 }
 
@@ -74,8 +74,10 @@
 }
 
 .center {
+  flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
   padding: 4rem 0;
@@ -227,4 +229,8 @@
   to {
     transform: rotate(0deg);
   }
+}
+
+.footer {
+  justify-self: flex-end;
 }

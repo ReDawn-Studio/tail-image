@@ -15,3 +15,5 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
     </body>
   </html>
 );
+
+export default RootLayout;
