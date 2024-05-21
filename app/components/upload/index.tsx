@@ -42,8 +42,9 @@ const Uploader: React.FC = () => {
 
   const handleUpload = () => {
     const formData = new FormData();
+    // TODO: 这里后面改下，只能上传单张图片
     fileList.forEach((file) => {
-      formData.append('files[]', file as FileType);
+      formData.append('file', file as FileType);
     });
     setUploading(true);
     fetch('api/upload', {

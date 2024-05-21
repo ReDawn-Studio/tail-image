@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@aws-sdk/client-s3": "^3.577.0",
+    "@aws-sdk/lib-storage": "^3.578.0",
     "antd": "^5.17.2",
     "formidable": "^3.5.1",
     "next": "14.2.3",
