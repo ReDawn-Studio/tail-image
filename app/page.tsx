@@ -1,7 +1,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Uploader from "./components/upload/index";
-
+import { Avatar } from "antd";
+import { UserOutlined } from '@ant-design/icons';
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
           ✨ TAIL IMAGE HOSTING ✨
         </p>
         <div>
-          AVATAR
+          <Avatar size={64} icon={<UserOutlined />} />
         </div>
       </div>
 

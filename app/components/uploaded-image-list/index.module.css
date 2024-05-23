@@ -1,0 +1,9 @@
+.text {
+  color: rgb(var(--foreground-rgb));
+  text-align: center;
+}
+
+.modalContent {
+  max-height: 70vh;
+  overflow-y: scroll;
+}

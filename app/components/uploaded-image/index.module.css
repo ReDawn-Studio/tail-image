@@ -1,0 +1,31 @@
+.ant-upload-list-item {
+  background: red !important;
+}
+
+.itemWrapper {
+  display: flex;
+}
+
+.itemInfo {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  .size {
+    font-weight: 700;
+  }
+
+  .name {
+  }
+
+  .textInfo {
+  }
+}
+
+.operations {
+  display: flex;
+  font-size: 18px;
+  font-weight: 700;
+}
+.text {
+  color: rgb(var(--foreground-rgb));
+}

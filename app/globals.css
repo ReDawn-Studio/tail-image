@@ -105,3 +105,24 @@ a {
     color-scheme: dark;
   }
 }
+
+/* Webkit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--foreground-rgb));
+  border-radius: 4px; /* 圆角 */
+}
+
+/* Firefox */
+scrollbar-width: thin; /* 确保滚动条较细，Firefox特有属性 */
+* {
+  scrollbar-color: rgba(var(--foreground-rgb)) transparent; /* 滚动条颜色和轨道颜色 */
+}

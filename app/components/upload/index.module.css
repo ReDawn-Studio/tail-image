@@ -1,7 +1,19 @@
 .textWrapper {
   width: 600px;
+  height: 120px;
   padding: 24px;
 }
 .text {
+  color: rgb(var(--foreground-rgb));
+}
+.confirmButton {
+  margin-top: 16px;
+  color: #fff !important;
+  /* color: rgb(var(--foreground-rgb)); */
+}
+.uploadedImageWrapper {
+  height: 100%;
+}
+.previewButton {
   color: rgb(var(--foreground-rgb));
 }

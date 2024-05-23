@@ -8,22 +8,6 @@ export const config = {
   },
 };
 
-// interface FTPConfig {
-//   host: string;
-//   user: string;
-//   port: number;
-//   password: string;
-//   secure?: boolean; // 默认为false，可根据需要设置为true以使用TLS/SSL
-// }
-
-// const FTP_CONFIG: FTPConfig = {
-//   host: "cn-sy1.rains3.com",
-//   port: 8021,
-//   user: "S44rW0aGBY1p8zIu",
-//   password: "48VnWv6OJ2NeVQnKC4ozurlGYjwEPW",
-//   secure: true,
-// };
-
 interface S3Config {
   endpoint: string;
   accessKey: string;
@@ -58,7 +42,7 @@ export async function POST(req: NextRequest) {
         },
         region,
         endpoint,
-      }),
+      } as unknown as S3Client),
       params: {
         ACL: "public-read",
         Bucket,
@@ -72,13 +56,12 @@ export async function POST(req: NextRequest) {
     })
       .done()
       .then((data) => {
-        console.log("这里是什么", data);
+        return Response.json({ code: 200, msg: "OK" });
       })
       .catch((err) => {
         console.log(err);
+        return Response.json({ code: 500, msg: JSON.stringify(err) });
       });
-
-    return Response.json({ code: 200, msg: "OK" });
   } catch (err) {
     return Response.json({ code: 500, msg: JSON.stringify(err) });
   }
