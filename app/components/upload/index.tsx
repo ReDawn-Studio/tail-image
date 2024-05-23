@@ -4,6 +4,7 @@ import { Button, message, Modal, Upload } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import styles from "./index.module.css";
 import UploadedImageList from "../uploaded-image-list";
+import request from "@/app/util/request";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -15,7 +16,6 @@ const Uploader: React.FC = () => {
   const [fileList, setFileList] = useState<Array<UploadFile>>([]);
   const [uploading, setUploading] = useState(false);
   const [isModalShow, setIsModalShow] = useState(false);
-  const [fileSizeSum, setFileSizeSum] = useState(0);
 
   const fileListRef = useRef<Array<UploadFile>>([]); // 因为多文件上传的时候，批处理机制合并了几个任务，导致只有最后一个文件被有效上传
   const fileSizeSumRef = useRef(0);
@@ -28,11 +28,12 @@ const Uploader: React.FC = () => {
       formData.append("file", file as FileType);
     });
     setUploading(true);
-    fetch("api/upload", {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
+    request
+      .post("api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // 根据实际情况决定是否需要设置此头
+        },
+      })
       .then(() => {
         setFileList([]);
         message.success("upload successfully.");
@@ -58,7 +59,7 @@ const Uploader: React.FC = () => {
       const newFileList = fileList.slice();
       newFileList.splice(index, 1);
       setFileList(newFileList);
-      setFileSizeSum(Math.max(fileSizeSumRef.current, 0));
+      // setFileSizeSum(Math.max(fileSizeSumRef.current, 0));
     },
     beforeUpload: (file) => {
       // TODO: 未来还要检查总的存储空间是否足够
@@ -136,6 +137,7 @@ const Uploader: React.FC = () => {
       </Dragger>
       <Button
         type="primary"
+        size="large"
         onClick={handleUpload}
         disabled={fileList.length === 0}
         loading={uploading}

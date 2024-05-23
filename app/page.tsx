@@ -2,16 +2,13 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Uploader from "./components/upload/index";
 import { Avatar } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from "@ant-design/icons";
 
 export default function Home() {
   return (
     <main className={styles.main}>
-
       <div className={styles.description}>
-        <p>
-          ✨ TAIL IMAGE HOSTING ✨
-        </p>
+        <p>✨ TAIL IMAGE HOSTING ✨</p>
         <div>
           <Avatar size={64} icon={<UserOutlined />} />
         </div>
@@ -27,9 +24,7 @@ export default function Home() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <h2>
-          Get More Information By Clicking Here
-        </h2>
+        <h2>Get More Information By Clicking Here</h2>
       </a>
     </main>
   );
