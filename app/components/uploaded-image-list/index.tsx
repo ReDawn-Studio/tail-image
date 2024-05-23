@@ -19,7 +19,7 @@ const UploadedImageList = (props: UploadedImageListProps) => {
 
   const handleRemoveItem = (uid: string) => {
     const filteredFileList = fileList.filter((file) => file.uid !== uid);
-    setFileList(filteredFileList);
+    setFileList([...filteredFileList]);
   };
 
   return (

@@ -1,13 +1,13 @@
 // utils/axiosConfig.ts
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import Router from "next/router";
 
 const request = axios.create({
   baseURL: process.env.API_BASE_URL,
 });
 
 export const tokenKey = "tail-token";
-const router = useRouter();
+// const router = useRouter();
 
 // 请求拦截器，添加token到请求头
 request.interceptors.request.use(
@@ -16,8 +16,7 @@ request.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
-      console.log("???", token);
-      router.push("/login");
+      Router.push("/login");
     }
     return config;
   },
@@ -35,8 +34,8 @@ request.interceptors.response.use(
       originalRequest._retry = true;
       try {
         localStorage.removeItem(tokenKey);
-        const router = useRouter();
-        router.push("/login");
+        // const router = useRouter();
+        // router.push("/login");
         return Promise.reject(error);
       } catch (_error) {
         return Promise.reject(_error);

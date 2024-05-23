@@ -50,17 +50,13 @@ const Uploader: React.FC = () => {
     e.stopPropagation();
     setIsModalShow(true);
   };
+  const handleFileListUpdate = (newFileList: Array<UploadFile>) => {
+    setFileList(newFileList);
+    fileListRef.current = newFileList;
+  }
 
-  const props: UploadProps = {
+  const uploadProps: UploadProps = {
     multiple: true,
-    onRemove: (file) => {
-      fileSizeSumRef.current -= file?.size || 0;
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
-      // setFileSizeSum(Math.max(fileSizeSumRef.current, 0));
-    },
     beforeUpload: (file) => {
       // TODO: 未来还要检查总的存储空间是否足够
       if (fileSizeSumRef.current > maxFileSize) {
@@ -106,10 +102,10 @@ const Uploader: React.FC = () => {
       >
         <UploadedImageList
           fileList={fileList}
-          setFileList={setFileList}
+          setFileList={handleFileListUpdate}
         ></UploadedImageList>
       </Modal>
-      <Dragger {...props}>
+      <Dragger {...uploadProps}>
         <div className={styles.textWrapper}>
           {fileList.length > 0 ? (
             <div className={styles.uploadedImageWrapper}>

@@ -35,18 +35,21 @@ const UploadedImage = (props: UploadedImageProps) => {
   };
 
   useEffect(() => {
+    if (file instanceof File) {
+      const url = window.URL.createObjectURL(file);
+      // setPreviewImageUrl(url)
+      const name = file.name;
+      const size = computeSizeWithUnit(file.size);
+      const fileInfo = {
+        url,
+        name,
+        size,
+      };
+      setFileInfo(fileInfo);
+    }
     return () => {
-      if (file instanceof File) {
-        const url = window.URL.createObjectURL(file);
-        // setPreviewImageUrl(url)
-        const name = file.name;
-        const size = computeSizeWithUnit(file.size);
-        const fileInfo = {
-          url,
-          name,
-          size,
-        };
-        setFileInfo(fileInfo);
+      if (fileInfo?.url) {
+        window.URL.revokeObjectURL(fileInfo.url);
       }
     };
   }, [file]);

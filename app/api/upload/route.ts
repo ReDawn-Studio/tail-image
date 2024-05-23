@@ -10,7 +10,7 @@ export const config = {
 const endpoint = process.env.END_POINT;
 const secretAccessKey = process.env.SECRECT_ACCESS_KEY;
 const accessKeyId = process.env.ACCESS_KEY_ID;
-const Bucket = process.env.BUCKET;
+const bucket = process.env.BUCKET;
 const region = process.env.REGION;
 
 export async function POST(req: NextRequest) {
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       } as unknown as S3Client),
       params: {
         ACL: "public-read",
-        Bucket,
+        Bucket: bucket,
         Key: `test-username/${file.name}`,
         Body: file.stream(),
       },
