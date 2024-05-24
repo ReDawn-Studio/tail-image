@@ -1,10 +1,11 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import Uploader from "./components/upload/index";
+import Uploader from "./components/upload";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 export default function Home() {
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>

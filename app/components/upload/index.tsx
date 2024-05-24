@@ -1,18 +1,19 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button, message, Modal, Upload } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import styles from "./index.module.css";
 import UploadedImageList from "../uploaded-image-list";
 import request from "@/app/util/request";
-
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const { Dragger } = Upload;
 const maxFileSize = 1024 * 1024 * 3; // 3MB
 const validatedFileTypeList = ["image/jpeg", "image/png"];
 
-const Uploader: React.FC = () => {
+
+
+const Uploader = () => {
   const [fileList, setFileList] = useState<Array<UploadFile>>([]);
   const [uploading, setUploading] = useState(false);
   const [isModalShow, setIsModalShow] = useState(false);
@@ -51,9 +52,9 @@ const Uploader: React.FC = () => {
     setIsModalShow(true);
   };
   const handleFileListUpdate = (newFileList: Array<UploadFile>) => {
-    setFileList(newFileList);
     fileListRef.current = newFileList;
-  }
+    setFileList(newFileList);
+  };
 
   const uploadProps: UploadProps = {
     multiple: true,
@@ -73,8 +74,7 @@ const Uploader: React.FC = () => {
         });
         return true;
       } else {
-        fileListRef.current = [...fileListRef.current, file];
-        setFileList(fileListRef.current);
+        handleFileListUpdate([...fileListRef.current, file]);
         return false;
       }
     },
@@ -84,6 +84,7 @@ const Uploader: React.FC = () => {
     showUploadList: false,
     fileList,
   };
+
 
   return (
     <>
