@@ -7,11 +7,20 @@ const request = axios.create({
   baseURL: process.env.API_BASE_URL,
 });
 
+const whiteList = [
+  'api/login',
+  'api/register'
+]
+
 export const tokenKey = "tail-token";
 // const router = useRouter();
-
+// TODO: 要给登录和注册两个接口放行
 request.interceptors.request.use(
   (config) => {
+    if (whiteList.includes(config.url as string)) {
+      return config
+    }
+
     const token = localStorage.getItem(tokenKey);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

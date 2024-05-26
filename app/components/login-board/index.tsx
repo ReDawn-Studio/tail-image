@@ -3,18 +3,20 @@ import React from "react";
 import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input } from "antd";
 import styles from "./index.module.css";
+import request from "@/app/util/request";
 
 const { Item } = Form;
 const { Password } = Input;
 
 type FieldType = {
-  email?: string;
+  username?: string;
   password?: string;
   remember?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log("Success:", values);
+const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+  const res = request.post('api/login', values)
+  console.log('login', res)
 };
 
 const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
@@ -32,9 +34,9 @@ const LoginBoard: React.FC = () => {
       autoComplete="off"
     >
       <Item<FieldType>
-        label={<div className={styles.text}>Email</div>}
-        name="email"
-        rules={[{ required: true, message: "Please input your Email!" }]}
+        label={<div className={styles.text}>Username</div>}
+        name="username"
+        rules={[{ required: true, message: "Please input your username!" }]}
       >
         <Input className={styles.input} />
       </Item>

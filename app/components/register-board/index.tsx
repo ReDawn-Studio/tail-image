@@ -3,18 +3,20 @@ import React from "react";
 import type { FormProps } from "antd";
 import { Button, Form, Input, Space } from "antd";
 import styles from "./index.module.css";
+import request from "@/app/util/request";
 
 const { Item } = Form;
 const { Password } = Input;
 
 type FieldType = {
-  email?: string;
+  username?: string;
   password?: string;
-  code?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
   console.log("Success:", values);
+  const res = request.post('api/register', values)
+  console.log('res', res)
 };
 
 const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
@@ -32,9 +34,9 @@ const RegisterBoard: React.FC = () => {
       autoComplete="off"
     >
       <Item<FieldType>
-        label={<div className={styles.text}>Email</div>}
-        name="email"
-        rules={[{ required: true, message: "Please input your email!" }]}
+        label={<div className={styles.text}>Username</div>}
+        name="username"
+        rules={[{ required: true, message: "Please input your username!" }]}
       >
         <Input className={styles.input} />
       </Item>
@@ -47,19 +49,6 @@ const RegisterBoard: React.FC = () => {
         <Password className={styles.input} />
       </Item>
 
-      <Item<FieldType>
-        label={<div className={styles.text}>Code</div>}
-        name="email"
-        rules={[
-          { required: true, message: "Please input your code from email!" },
-        ]}
-      >
-        <Input
-          className={styles.input}
-          placeholder="Please input your code from email!"
-          suffix={<Button type="link">Get Code</Button>}
-        />
-      </Item>
 
       <Item className={styles.center}>
         <Button type="primary" htmlType="submit">
