@@ -1,10 +1,25 @@
+"use client";
 import Image from "next/image";
-import styles from "./page.module.css";
 import Uploader from "./components/upload";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      router.push("/login");
+    };
+
+    document.addEventListener("tokenInvalidate", handleUnauthorized);
+    return () => {
+      document.removeEventListener("tokenInvalidate", handleUnauthorized);
+    };
+  }, [router]);
 
   return (
     <main className={styles.main}>

@@ -1,11 +1,13 @@
 // utils/axiosConfig.ts
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const request = axios.create({
   baseURL: process.env.API_BASE_URL,
 });
 
 export const tokenKey = "tail-token";
+// const router = useRouter();
 
 // 请求拦截器，添加token到请求头
 request.interceptors.request.use(
@@ -13,16 +15,10 @@ request.interceptors.request.use(
     const token = localStorage.getItem(tokenKey);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      return config;
     } else {
-      /* TODO: 
-        考虑了很久，我们觉得 SSR 首屏带来的 SEO 优势才是市场竞争中最重要的点，
-        所以我们仍然决定使用 location.href，哪怕它会导致页面重新加载 
-      */
-      // document.dispatchEvent(new CustomEvent("token-expired"));
-      location.href = "/login";
-      return Promise.reject(new Error("No token found, request aborted!"));
+      document.dispatchEvent(new CustomEvent("tokenInvalidate"));
     }
+    return config;
   },
   (error) => {
     console.log("why", error);
@@ -38,8 +34,8 @@ request.interceptors.response.use(
       originalRequest._retry = true;
       try {
         localStorage.removeItem(tokenKey);
-        // const router = useRouter();
-        // router.push("/login");
+        const router = useRouter();
+        router.push("/login");
         return Promise.reject(error);
       } catch (_error) {
         return Promise.reject(_error);

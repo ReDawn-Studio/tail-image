@@ -21,3 +21,9 @@
   display: flex;
   justify-content: center;
 }
+
+.title {
+  font-size: 28px;
+  margin: 20px;
+  white-space: no-wrap;
+}

@@ -1,63 +1,67 @@
-'use client';
-import React from 'react';
-import type { FormProps } from 'antd';
-import { Button, Checkbox, Form, Input } from 'antd';
-import styles from './index.module.css';
+"use client";
+import React from "react";
+import type { FormProps } from "antd";
+import { Button, Checkbox, Form, Input } from "antd";
+import styles from "./index.module.css";
+
+const { Item } = Form;
+const { Password } = Input;
 
 type FieldType = {
-  username?: string;
+  email?: string;
   password?: string;
   remember?: string;
 };
 
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
+const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+  console.log("Success:", values);
 };
 
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
+const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
+  console.log("Failed:", errorInfo);
 };
 
 const LoginBoard: React.FC = () => {
-
   return (
     <Form
-      name="basic"
-      labelCol={{ span: 4 }}
+      layout="vertical"
+      name="login"
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item<FieldType>
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+      <Item<FieldType>
+        label={<div className={styles.text}>Email</div>}
+        name="email"
+        rules={[{ required: true, message: "Please input your Email!" }]}
       >
-        <Input />
-      </Form.Item>
+        <Input className={styles.input} />
+      </Item>
 
-      <Form.Item<FieldType>
-        label="Password"
+      <Item<FieldType>
+        label={<div className={styles.text}>Password</div>}
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: "Please input your password!" }]}
       >
-        <Input.Password />
-      </Form.Item>
+        <Password className={styles.input} />
+      </Item>
 
-      <Form.Item<FieldType>
+      <Item<FieldType>
         name="remember"
         valuePropName="checked"
         className={styles.center}
       >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
+        <Checkbox>
+          <div className={styles.text}>Remember me</div>
+        </Checkbox>
+      </Item>
 
-      <Form.Item className={styles.center}>
+      <Item className={styles.center}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Sign In
         </Button>
-      </Form.Item>
+      </Item>
     </Form>
   );
 };
