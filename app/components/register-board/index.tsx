@@ -15,8 +15,8 @@ type FieldType = {
 
 const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
   console.log("Success:", values);
-  const res = request.post('api/register', values)
-  console.log('res', res)
+  const res = request.post("api/register", values);
+  console.log("res", res);
 };
 
 const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
@@ -48,7 +48,6 @@ const RegisterBoard: React.FC = () => {
       >
         <Password className={styles.input} />
       </Item>
-
 
       <Item className={styles.center}>
         <Button type="primary" htmlType="submit">

@@ -15,8 +15,8 @@ type FieldType = {
 };
 
 const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-  const res = request.post('api/login', values)
-  console.log('login', res)
+  const res = request.post("api/login", values);
+  console.log("login", res);
 };
 
 const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {

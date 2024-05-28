@@ -12,7 +12,7 @@ const connectDatabase = async () => {
 };
 
 const executeSql = async (sql: string, valueList: Array<any>) => {
-  const connection = await connectDatabase()
+  const connection = await connectDatabase();
   try {
     const [results] = await connection.execute(sql, valueList);
     connection.end();
