@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "./globals.css";
-import { useRouter } from "next/router";
+import { message } from "antd";
 
 export const metadata: Metadata = {
   title: "🦊尾巴图床 Tail Image Hosting",

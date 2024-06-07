@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { Upload } from "@aws-sdk/lib-storage";
 import { S3Client } from "@aws-sdk/client-s3";
+import verifyToken from "@/app/util/token";
 export const config = {
   api: {
     bodyParser: false, // Disable body parsing, consume as stream
@@ -14,6 +15,9 @@ const bucket = process.env.BUCKET;
 const region = process.env.REGION;
 
 export async function POST(req: NextRequest) {
+  const token = req.cookies.get("tail-token");
+  const tokenCheckRes = await verifyToken(token?.value ?? "");
+  console.log("tokenCheck", tokenCheckRes);
   try {
     const data = await req.formData();
     const file: File | null = data.get("file") as unknown as File;

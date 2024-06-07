@@ -11,8 +11,6 @@ const { Dragger } = Upload;
 const maxFileSize = 1024 * 1024 * 3; // 3MB
 const validatedFileTypeList = ["image/jpeg", "image/png"];
 
-
-
 const Uploader = () => {
   const [fileList, setFileList] = useState<Array<UploadFile>>([]);
   const [uploading, setUploading] = useState(false);
@@ -21,7 +19,7 @@ const Uploader = () => {
   const fileListRef = useRef<Array<UploadFile>>([]); // 因为多文件上传的时候，批处理机制合并了几个任务，导致只有最后一个文件被有效上传
   const fileSizeSumRef = useRef(0);
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi] = message.useMessage();
 
   const handleUpload = () => {
     const formData = new FormData();
@@ -37,6 +35,7 @@ const Uploader = () => {
       })
       .then(() => {
         setFileList([]);
+        fileListRef.current = [];
         message.success("upload successfully.");
       })
       .catch(() => {
@@ -85,11 +84,10 @@ const Uploader = () => {
     fileList,
   };
 
-
   return (
     <>
       {/* ant design 的全局提示所需要的： */}
-      {contextHolder}
+
       <Modal
         footer={null}
         title={<h4>Pending Upload Images 🎈</h4>}

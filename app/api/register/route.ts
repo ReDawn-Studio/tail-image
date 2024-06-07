@@ -16,18 +16,19 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     // TODO: 1.校验一下数据格式 2.通信过程中最好还是约定一个公钥，这样才能防止被中间人攻击
     if (data.username && data.password) {
-      const { username, password } = data;
+      const { username, password, email } = data;
       const salt = await bcryptjs.genSalt(10);
       const hashedPassword = await bcryptjs.hash(password, salt);
-      // 邮箱暂时不绑定
+
       const res = await executeSql(
         "INSERT INTO user (username, password, email) VALUES (?, ?, ?);",
-        [username, hashedPassword, "0"]
+        [username, hashedPassword, email]
       );
       return Response.json({ status: 200, msg: res });
     }
     return Response.json({ status: 500, msg: "failed" });
   } catch (err) {
+    // TODO: 这里不该把全部消息返回给前端，因为这里会暴露SQL语句
     return Response.json({ status: 500, msg: err });
   }
 }

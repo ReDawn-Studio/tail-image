@@ -2,7 +2,7 @@
 import styles from "./index.module.css";
 import LoginBoard from "../components/login-board/index";
 import { useState } from "react";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import RegisterBoard from "../components/register-board";
 
 enum BOARD_STATUS {
@@ -24,7 +24,7 @@ const textMap = {
     title: "Tail Image Hosting 🦊",
   },
   [BOARD_STATUS.REGISTER]: {
-    title: "A New User 🥳",
+    title: "Welcome 🥳",
   },
   [BOARD_STATUS.HELP]: {
     title: "Need Any Help 🎈",
@@ -34,6 +34,7 @@ const textMap = {
 const Login = () => {
   // TODO：我的想法是，正居中，因为这是最好适配移动端的写法了。
   const [boardStatus, setBoardStatus] = useState(BOARD_STATUS.LOGIN);
+  const [_, contextHolder] = message.useMessage();
 
   const handleBoardChangeBetweenLoginAndRegister = () => {
     const target =
@@ -45,6 +46,7 @@ const Login = () => {
 
   return (
     <div className={styles.pageWrapper}>
+      {contextHolder}
       <h2 className={styles.title}>{textMap[boardStatus].title}</h2>
       <div className={styles.boardWrapper}>
         {boardMap[boardStatus]?.()}

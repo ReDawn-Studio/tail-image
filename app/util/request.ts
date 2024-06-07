@@ -16,13 +16,13 @@ request.interceptors.request.use(
       return config;
     }
 
-    const token = localStorage.getItem(tokenKey);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      document.dispatchEvent(new CustomEvent("tokenInvalidate"));
-      return null as unknown as InternalAxiosRequestConfig;
-    }
+    // const token = localStorage.getItem(tokenKey);
+    // if (token) {
+    //   config.headers.Authorization = `Bearer ${token}`;
+    // } else {
+    //   // document.dispatchEvent(new CustomEvent("tokenInvalidate"));
+    //   return null as unknown as InternalAxiosRequestConfig;
+    // }
     return config;
   },
   (error) => {

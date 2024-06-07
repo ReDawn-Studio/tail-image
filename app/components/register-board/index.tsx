@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
 import type { FormProps } from "antd";
-import { Button, Form, Input, Space } from "antd";
+import { Button, Form, Input, Space, message } from "antd";
 import styles from "./index.module.css";
 import request from "@/app/util/request";
+import { useRouter } from "next/navigation";
 
 const { Item } = Form;
 const { Password } = Input;
@@ -11,19 +12,30 @@ const { Password } = Input;
 type FieldType = {
   username?: string;
   password?: string;
+  email?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-  console.log("Success:", values);
-  const res = request.post("api/register", values);
-  console.log("res", res);
-};
+const RegisterBoard = () => {
+  const router = useRouter();
+  // const [messageApi] = message.useMessage();
 
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    const res = await request.post("api/register", values);
+    if (res.status === 200) {
+      // messageApi.success("Success!");
+      // const timer = setTimeout(() => {
+      //   clearTimeout(timer);
+      //   }, 1000);
+      router.push("/");
+    }
+  };
 
-const RegisterBoard: React.FC = () => {
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <Form
       layout="vertical"
@@ -47,6 +59,14 @@ const RegisterBoard: React.FC = () => {
         rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Password className={styles.input} />
+      </Item>
+
+      <Item<FieldType>
+        label={<div className={styles.text}>Email</div>}
+        name="email"
+        rules={[{ required: true, message: "Please input your email!" }]}
+      >
+        <Input className={styles.input} />
       </Item>
 
       <Item className={styles.center}>
