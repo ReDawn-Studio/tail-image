@@ -19,7 +19,9 @@ const RegisterBoard = () => {
   const router = useRouter();
   // const [messageApi] = message.useMessage();
 
-  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+  const onFinish: FormProps<FieldType>["onFinish"] = async (
+    values: FieldType
+  ) => {
     const res = await request.post("api/register", values);
     if (res.status === 200) {
       // messageApi.success("Success!");
@@ -31,7 +33,7 @@ const RegisterBoard = () => {
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
+    errorInfo: Error
   ) => {
     console.log("Failed:", errorInfo);
   };

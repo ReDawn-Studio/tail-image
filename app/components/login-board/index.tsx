@@ -4,6 +4,7 @@ import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input } from "antd";
 import styles from "./index.module.css";
 import request from "@/app/util/request";
+import { useRouter } from "next/navigation";
 
 const { Item } = Form;
 const { Password } = Input;
@@ -14,16 +15,25 @@ type FieldType = {
   remember?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-  const res = request.post("api/login", values);
-  console.log("login", res);
-};
+const LoginBoard = () => {
+  const router = useRouter();
 
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
+  const onFinish: FormProps<FieldType>["onFinish"] = async (
+    values: FieldType
+  ) => {
+    const res = await request.post("api/login", values);
+    if (res.status === 200) {
+      // TODO: 要考虑下密码错误的情况，后面我们要单独处理写个文件放所有的枚举
+      router.push("/");
+    }
+  };
 
-const LoginBoard: React.FC = () => {
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo: Error
+  ) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <Form
       layout="vertical"
