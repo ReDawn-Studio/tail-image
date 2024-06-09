@@ -33,7 +33,7 @@ const RegisterBoard = () => {
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo: Error
+    errorInfo
   ) => {
     console.log("Failed:", errorInfo);
   };

@@ -5,6 +5,7 @@ import { Button, Checkbox, Form, Input } from "antd";
 import styles from "./index.module.css";
 import request from "@/app/util/request";
 import { useRouter } from "next/navigation";
+import { useStore } from "@/app/store";
 
 const { Item } = Form;
 const { Password } = Input;
@@ -17,6 +18,7 @@ type FieldType = {
 
 const LoginBoard = () => {
   const router = useRouter();
+  const store = useStore();
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (
     values: FieldType
@@ -24,12 +26,13 @@ const LoginBoard = () => {
     const res = await request.post("api/login", values);
     if (res.status === 200) {
       // TODO: 要考虑下密码错误的情况，后面我们要单独处理写个文件放所有的枚举
+      store.user.setUserInfo({ ...res.data.data });
       router.push("/");
     }
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo: Error
+    errorInfo
   ) => {
     console.log("Failed:", errorInfo);
   };

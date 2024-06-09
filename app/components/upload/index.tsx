@@ -5,6 +5,7 @@ import type { GetProp, UploadFile, UploadProps } from "antd";
 import styles from "./index.module.css";
 import UploadedImageList from "../uploaded-image-list";
 import request from "@/app/util/request";
+import { useStore } from "@/app/store";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const { Dragger } = Upload;
@@ -24,7 +25,7 @@ const Uploader = () => {
   const handleUpload = () => {
     const formData = new FormData();
     fileList.forEach((file) => {
-      formData.append("file", file as FileType);
+      formData.append("file[]", file);
     });
     setUploading(true);
     request
@@ -33,13 +34,18 @@ const Uploader = () => {
           "Content-Type": "multipart/form-data", // 根据实际情况决定是否需要设置此头
         },
       })
-      .then(() => {
-        setFileList([]);
-        fileListRef.current = [];
-        message.success("upload successfully.");
+      .then((res) => {
+        console.log("res", res?.data);
+        if (res.data?.code === 200) {
+          setFileList([]);
+          fileListRef.current = [];
+          message.success("upload successfully.");
+        } else {
+          message.error(res.data.msg);
+        }
       })
-      .catch(() => {
-        message.error("upload failed.");
+      .catch((err) => {
+        message.error(`upload failed. ${err}`);
       })
       .finally(() => {
         setUploading(false);
@@ -57,7 +63,7 @@ const Uploader = () => {
 
   const uploadProps: UploadProps = {
     multiple: true,
-    beforeUpload: (file) => {
+    beforeUpload: (file: File) => {
       // TODO: 未来还要检查总的存储空间是否足够
       if (fileSizeSumRef.current > maxFileSize) {
         messageApi.open({
@@ -91,7 +97,7 @@ const Uploader = () => {
       <Modal
         footer={null}
         title={<h4>Pending Upload Images 🎈</h4>}
-        open={isModalShow}
+        open={isModalShow && !uploading}
         onOk={() => {
           setIsModalShow(false);
         }}
@@ -112,8 +118,7 @@ const Uploader = () => {
               <p className={styles.text}>click to add files or preview</p>
               <Button
                 onClick={handlePreview as any}
-                disabled={fileList.length === 0}
-                loading={uploading}
+                disabled={fileList.length === 0 || uploading}
                 className={styles.previewButton}
               >
                 Preview

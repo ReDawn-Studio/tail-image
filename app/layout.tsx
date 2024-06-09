@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { StoreProvider } from "./store/index";
 import "./globals.css";
-import { message } from "antd";
 
 export const metadata: Metadata = {
   title: "🦊尾巴图床 Tail Image Hosting",
@@ -12,7 +12,9 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <html lang="en">
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <StoreProvider defaultValue={{ user: {} }}>{children}</StoreProvider>
+        </AntdRegistry>
       </body>
     </html>
   );
