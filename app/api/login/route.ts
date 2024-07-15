@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         };
         const tokenKey = process.env.TOKEN_KEY as string;
         const token = jwt.sign(tokenData, tokenKey, {
-          expiresIn: "1d",
+          expiresIn: 60 * 15,
         });
 
         const userInfo = {
@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
           username: queryResult.username,
         };
 
-        //! token 直接传给前端存 localStorage，免得再从 cookie 读取一次
         //! 后来想想还是算了，也太不安全了
         const response = NextResponse.json({
           data: { userInfo },
