@@ -25,7 +25,7 @@ const Uploader = () => {
   const handleUpload = () => {
     const formData = new FormData();
     fileList.forEach((file) => {
-      formData.append("file[]", file);
+      formData.append("file[]", file as any);
     });
     setUploading(true);
     request
@@ -41,11 +41,11 @@ const Uploader = () => {
           fileListRef.current = [];
           message.success("upload successfully.");
         } else {
-          message.error(res.data.msg);
+          message.error("服务器出大问题");
         }
       })
       .catch((err) => {
-        message.error(`upload failed. ${err}`);
+        message.error("登录是必要的！");
       })
       .finally(() => {
         setUploading(false);
@@ -79,7 +79,7 @@ const Uploader = () => {
         });
         return true;
       } else {
-        handleFileListUpdate([...fileListRef.current, file]);
+        handleFileListUpdate([...fileListRef.current as any, file]);
         return false;
       }
     },

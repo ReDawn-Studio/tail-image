@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 const request = axios.create({
   baseURL: process.env.API_BASE_URL,
 });
-
+console.log(process.env.API_BASE_URL);
 const whiteList = ["api/login", "api/register"];
 
 export const tokenKey = "tail-token";
@@ -39,7 +39,7 @@ request.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        localStorage.removeItem(tokenKey);
+        // localStorage.removeItem(tokenKey);
         const router = useRouter();
         router.push("/login");
         return Promise.reject(error);

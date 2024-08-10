@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 
 const connectDatabase = async () => {
+ //  console.log( process.env.DB_HOST,process.env.DB_NAME,process.env.DB_USERNAME,process.env.DB_PASSWORD);
   const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
@@ -11,8 +12,10 @@ const connectDatabase = async () => {
   return connection;
 };
 
+
 const executeSql = async (sql: string, valueList: Array<any>) => {
   const connection = await connectDatabase();
+  // console.log('链接数据库', connection,process.env.DB_HOST);
   try {
     const [results] = await connection.execute(sql, valueList);
     connection.end();

@@ -9,6 +9,7 @@ interface LoginRes {
   username: string;
   password: string;
   email: string;
+  img: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -16,16 +17,17 @@ export async function POST(req: NextRequest) {
     const requestParam = await req.json();
     if (requestParam.username && requestParam.password) {
       // const testDemo = await executeSql("SELECT * FROM user", []);
-      const res = (await executeSql("SELECT * FROM user WHERE username = ?", [
+      const res = (await executeSql("SELECT * FROM users WHERE username = ?", [
         requestParam.username,
       ])) as QueryResult as Array<LoginRes>;
       const queryResult = res?.[0];
+      // console.log('结果', res);
 
       const isMatch = await bcryptjs.compare(
         requestParam.password,
         queryResult?.password ?? ""
       );
-
+      // console.log(666, requestParam.password, queryResult?.password);
       if (isMatch) {
         const tokenData = {
           id: queryResult.id,
@@ -39,6 +41,8 @@ export async function POST(req: NextRequest) {
         const userInfo = {
           email: queryResult.email,
           username: queryResult.username,
+          avatar: queryResult.img,
+          id: queryResult.id,
         };
 
         //! token 直接传给前端存 localStorage，免得再从 cookie 读取一次

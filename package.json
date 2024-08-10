@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next start",
     "start": "next start",
     "lint": "next lint"
   },
@@ -16,7 +16,7 @@
     "@aws-sdk/lib-storage": "^3.592.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
-    "antd": "^5.18.0",
+    "antd": "^5.19.4",
     "antd-style": "^3.6.2",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
@@ -25,12 +25,15 @@
     "mobx-react-lite": "^4.0.7",
     "next": "14.2.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "^18.3.1",
+    "react-photo-view": "^1.2.6"
   },
   "devDependencies": {
     "@ant-design/static-style-extract": "^1.0.2",
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
+    "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-dom": "^18.3.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",

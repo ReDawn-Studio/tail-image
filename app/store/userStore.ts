@@ -1,6 +1,7 @@
 export type IUserInfo = {
   username?: number;
   email?: string;
+  img?: string;
 };
 
 export interface IUserStore {

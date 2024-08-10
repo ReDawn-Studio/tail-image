@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { StoreProvider } from "./store/index";
+import 'react-photo-view/dist/react-photo-view.css';
 import "./globals.css";
 
 export const metadata: Metadata = {

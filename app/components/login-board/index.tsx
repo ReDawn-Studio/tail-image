@@ -24,9 +24,10 @@ const LoginBoard = () => {
     values: FieldType
   ) => {
     const res = await request.post("api/login", values);
-    if (res.status === 200) {
+    if (res.data.status === 200) {
       // TODO: 要考虑下密码错误的情况，后面我们要单独处理写个文件放所有的枚举
       store.user.setUserInfo({ ...res.data.data });
+      localStorage.setItem('user',JSON.stringify({ ...res.data.data.userInfo }));
       router.push("/");
     }
   };

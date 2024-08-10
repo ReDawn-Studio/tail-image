@@ -2,11 +2,13 @@ import { NextRequest } from "next/server";
 import { Upload } from "@aws-sdk/lib-storage";
 import { S3Client } from "@aws-sdk/client-s3";
 import verifyToken from "@/app/util/token";
-export const config = {
-  api: {
-    bodyParser: false, // Disable body parsing, consume as stream
-  },
-};
+import executeSql from "@/app/util/database";
+
+// export const config = {
+//   api: {
+//     bodyParser: false, // Disable body parsing, consume as stream
+//   },
+// };
 
 const endpoint = process.env.END_POINT;
 const secretAccessKey = process.env.SECRECT_ACCESS_KEY;
@@ -45,12 +47,13 @@ export async function POST(req: NextRequest) {
     } as unknown as S3Client);
 
     for (const file of fileList) {
+      const key = `${decryptedToken.username}/${Date.now()}-${file.name}`;
       const upload = new Upload({
         client,
         params: {
           ACL: "public-read",
           Bucket: bucket,
-          Key: `${decryptedToken.username}/${Date.now()}-${file.name}`,
+          Key: key,
           Body: file.stream(),
         },
         tags: [], // optional tags
@@ -59,9 +62,16 @@ export async function POST(req: NextRequest) {
         leavePartsOnError: false, // optional manually handle dropped parts
       });
       await upload.done();
-    }
+      const res = executeSql("INSERT INTO images (user_id, url) VALUES (?, ?)", [
+        decryptedToken.id,
+        `https://cn-sy1.rains3.com/tail-image/tail-image/${key}`,
+      ]);
 
-    return Response.json({ code: 200, msg: "OK" });
+      // console.log('结果', res);
+
+    }
+    return Response.json({ code: 200, msg: 'ok' });
+
   } catch (err) {
     return Response.json({ code: 500, msg: JSON.stringify(err) });
   }
