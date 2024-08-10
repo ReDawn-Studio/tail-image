@@ -71,7 +71,7 @@ const Display = () => {
   return (
     <div>
       <div className={styles.title} >我的图库</div>
-      <PhotoProvider toolbarRender={({ index, images }) => {
+      {imageUrls && <PhotoProvider toolbarRender={({ index, images }) => {
         return (
           <>
             <CopyToClipboard text={images[index].src!} onCopy={() => handleCopy(images[index].src!)} key={index}>
@@ -82,7 +82,7 @@ const Display = () => {
         );
       }}>
         <div className={styles.foo}>
-          {imageUrls?.slice(0, 10).map(({ url }, index) => (
+          {imageUrls?.map(({ url }, index) => (
             <PhotoView width={20} key={index} src={url}>
               <Tooltip title="Click to copy link" placement="top">
                 <img className={styles.img} src={url} alt="" />
@@ -90,7 +90,14 @@ const Display = () => {
             </PhotoView>
           ))}
         </div>
-      </PhotoProvider >
+      </PhotoProvider >}
+      {
+        imageUrls?.length === 0 && <div className={styles.noLogin}>
+          <p> 空荡荡~ 👀</p>
+          <div>快去登录上传吧! 🥳</div>
+
+        </div>
+      }
     </div >
   );
 };

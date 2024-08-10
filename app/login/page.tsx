@@ -41,7 +41,10 @@ const Login = () => {
       boardStatus === BOARD_STATUS.LOGIN
         ? BOARD_STATUS.REGISTER
         : BOARD_STATUS.LOGIN;
-    setBoardStatus(target);
+    if (target === BOARD_STATUS.REGISTER) {
+      message.warning(`注册请前往ReDawn主站点哦~`);
+    }
+    // setBoardStatus(target);
   };
 
   return (

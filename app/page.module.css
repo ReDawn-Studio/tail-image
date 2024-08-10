@@ -78,7 +78,8 @@
 }
 
 .card {
-  padding: 1rem 1.2rem;
+  padding: 3rem 1.2rem;
+  padding-bottom: 0;
   border-radius: var(--border-radius);
   background: rgba(var(--card-rgb), 0);
   border: 1px solid rgba(var(--card-border-rgb), 0);
@@ -111,7 +112,7 @@
   justify-content: flex-start;
   align-items: center;
   position: relative;
-  padding: 4rem 0;
+  /* padding: 4rem 0; */
 }
 
 /* .center::before {
@@ -173,15 +174,29 @@
   }
 
   .card {
-    padding: 1rem 2.5rem;
+    padding: 2rem 1.2rem;
+    padding-bottom: 0;
+    margin-top: 0.5rem;
+    /* align-items: flex-end;
+    pointer-events: none;
+    width: 100%;
+    inset: auto 0 0;
+    padding: 2rem;
+    height: 200px; 
+    position: fixed; */
+    /* background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgb(var(--background-end-rgb)) 40%
+    ); */
   }
 
   .card h2 {
-    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
   }
 
   .center {
-    padding: 8rem 0 6rem;
+    /* padding: 8rem 0 6rem; */
   }
 
   .center::before {
@@ -191,6 +206,8 @@
 
   .description {
     font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .description a {
@@ -198,10 +215,10 @@
   }
 
   .description p,
-  .description div {
+  .description p {
     display: flex;
     justify-content: center;
-    position: fixed;
+    /* position: fixed; */
     width: 100%;
   }
 
@@ -222,17 +239,18 @@
   }
 
   .description div {
-    align-items: flex-end;
+    /* align-items: flex-end;
     pointer-events: none;
     inset: auto 0 0;
     padding: 2rem;
-    height: 200px;
-    background: linear-gradient(
+    height: 200px; */
+    /* background: linear-gradient(
       to bottom,
       transparent 0%,
       rgb(var(--background-end-rgb)) 40%
-    );
-    z-index: 1;
+    ); */
+    /* z-index: 1; */
+
   }
 }
 
