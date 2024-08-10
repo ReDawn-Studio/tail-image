@@ -19,11 +19,20 @@ const region = process.env.REGION;
 // TODO: 不能这么存储图片，会有覆盖问题。。。
 export async function POST(req: NextRequest) {
   const token = req.cookies.get("tail-token");
+  // TODO: 1 如何检验 token 是否有效呢
   const decryptedToken = (await verifyToken(token?.value ?? "")) as Record<
     string,
     string | number
   >;
-  if (!(decryptedToken && decryptedToken?.username)) {
+  if (
+    !(
+      (
+        decryptedToken &&
+        decryptedToken?.username &&
+        Date.now() / 1000 < (decryptedToken?.exp as number)
+      ) // 过期了
+    )
+  ) {
     throw "upload failed, invalid token";
   }
 
