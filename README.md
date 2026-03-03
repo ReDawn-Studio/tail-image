@@ -1,11 +1,11 @@
 # ✨ Tail Image Hosting - 轻量级图床系统
 
-一个基于 Next.js 15 + React 19 + Ant Design 5 的现代化图床系统。
+一个基于 Next.js 14 + React 18 + shadcn/ui 的现代化图床系统。
 
 ## 🚀 技术栈
 
-- **框架**: Next.js 15 (App Router)
-- **UI**: React 19 + Ant Design 5
+- **框架**: Next.js 14 (App Router)
+- **UI**: React 18 + shadcn/ui + Tailwind CSS
 - **状态管理**: MobX 6
 - **存储**: AWS S3 / 兼容 S3 协议的对象存储
 - **数据库**: MySQL 2
@@ -13,13 +13,16 @@
 
 ## 📦 更新内容 (v0.2.0)
 
+### UI 框架迁移
+- ✅ **Ant Design → shadcn/ui**
+- ✅ 添加 Tailwind CSS
+- ✅ 自定义 UI 组件：checkbox, dialog, toast, toaster
+- ✅ 全局 Toast 通知系统
+- ✅ 更简约现代的设计风格
+
 ### 依赖更新
-- ✅ Next.js 14 → **15.2.4**
-- ✅ React 18 → **19.1.0**
-- ✅ Ant Design 5.19 → **5.24.8**
 - ✅ AWS SDK 3.592 → **3.782**
 - ✅ TypeScript 5.4 → **5.8.3**
-- ✅ ESLint 8 → **9.25**
 
 ### 代码规范
 - ✅ 添加 Prettier 配置
@@ -71,14 +74,15 @@ pnpm run type-check
 
 ```
 tail-image/
-├── app/              # Next.js App Router
-│   ├── api/         # API 路由
-│   ├── styles/      # 全局样式
-│   └── page.tsx     # 首页
-├── pages/           # 传统 Pages Router (兼容)
-├── public/          # 静态资源
-├── scripts/         # 工具脚本
-└── package.json     # 依赖配置
+├── app/                    # Next.js App Router
+│   ├── api/               # API 路由
+│   ├── components/        # 组件
+│   ├── components/ui/     # shadcn UI 组件
+│   └── page.tsx           # 首页
+├── components/            # 共享组件
+├── lib/                   # 工具函数
+├── public/                # 静态资源
+└── package.json           # 依赖配置
 ```
 
 ## 🔧 配置
@@ -99,10 +103,56 @@ DATABASE_URL=mysql://user:password@localhost:3306/tail_image
 JWT_SECRET=your_jwt_secret
 ```
 
+## 🚀 部署
+
+### Vercel 部署 (推荐)
+
+1. 在 [Vercel](https://vercel.com) 导入 GitHub 仓库
+2. 配置环境变量
+3. 自动构建部署
+
+```bash
+# 本地安装 Vercel CLI
+npm i -g vercel
+
+# 部署
+vercel
+```
+
+### 服务器部署
+
+```bash
+# 安装依赖
+pnpm install
+
+# 构建
+pnpm build
+
+# 使用 PM2 运行
+pm2 start npm --name "tail-image" -- start
+
+# 配置 nginx 反向代理
+server {
+    listen 80;
+    server_name your-domain.com;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
 ## 📄 许可证
 
 MIT
 
 ---
 
-**更新日志**: 2026-03-03 - v0.2.0 依赖现代化更新
+**更新日志**: 
+- 2026-03-03 - v0.2.0 UI 框架迁移 (Ant Design → shadcn/ui)
+- 2026-03-03 - v0.2.0 依赖现代化更新
