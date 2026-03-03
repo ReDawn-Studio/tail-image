@@ -3,16 +3,12 @@
  */
 import { useEffect, useState } from "react";
 import request from "@/app/util/request";
-import { Card, Tooltip, message, Button } from 'antd';
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
 import styles from "./index.module.css";
-const { Meta } = Card;
-
-interface ImageGalleryProps {
-  imageUrls: string[];
-}
 interface UrlObject {
   id?: number;
   url: string;
@@ -23,7 +19,7 @@ const Display = () => {
   const [imageUrls, setImageUrls] = useState<UrlObject[]>([]);
 
   const handleCopy = (url: string) => {
-    message.success(`已经复制到剪切板啦`);
+    toast({ title: "复制成功", description: "已经复制到剪切板啦" });
   };
   // const handleShow = () => {
   //   console.log(555);
@@ -47,7 +43,11 @@ const Display = () => {
 
           console.log("res666", res);
           if (res.data.status === 500) {
-            message.error(`登录已过期！请重新登录~`);
+            toast({
+              title: "登录已过期",
+              description: "请重新登录~",
+              variant: "destructive",
+            });
             localStorage.removeItem("user");
             location.reload();
           }
@@ -77,16 +77,14 @@ const Display = () => {
             <CopyToClipboard text={images[index].src!} onCopy={() => handleCopy(images[index].src!)} key={index}>
               <Button>复制URL</Button>
             </CopyToClipboard >
-            <Button onClick={() => handleDownload(images[index].src!)} style={{ marginLeft: '20px' }}>下载图片</Button>
+            <Button onClick={() => handleDownload(images[index].src!)} className={styles.downloadButton}>下载图片</Button>
           </>
         );
       }}>
         <div className={styles.foo}>
           {imageUrls?.map(({ url }, index) => (
             <PhotoView width={20} key={index} src={url}>
-              <Tooltip title="Click to copy link" placement="top">
-                <img className={styles.img} src={url} alt="" />
-              </Tooltip>
+              <img className={styles.img} src={url} alt="" title="Click to copy link" />
             </PhotoView>
           ))}
         </div>

@@ -12,18 +12,22 @@
   max-width: 70vw;
   padding: 2em;
   margin: 0;
-  background-color: rgba(var(--callout-rgb), 0.5);
-  border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-  border-radius: var(--border-radius);
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
 .buttonWrapper {
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
 }
 
 .title {
   font-size: 28px;
   margin: 20px;
   white-space: no-wrap;
+  color: hsl(var(--foreground));
 }
+

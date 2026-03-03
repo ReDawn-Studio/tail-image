@@ -2,8 +2,9 @@
 import styles from "./index.module.css";
 import LoginBoard from "../components/login-board/index";
 import { useState } from "react";
-import { Button, message } from "antd";
+import { Button } from "@/components/ui/button";
 import RegisterBoard from "../components/register-board";
+import { toast } from "@/components/ui/use-toast";
 
 enum BOARD_STATUS {
   LOGIN = 1,
@@ -32,9 +33,7 @@ const textMap = {
 };
 
 const Login = () => {
-  // TODO：我的想法是，正居中，因为这是最好适配移动端的写法了。
   const [boardStatus, setBoardStatus] = useState(BOARD_STATUS.LOGIN);
-  const [_, contextHolder] = message.useMessage();
 
   const handleBoardChangeBetweenLoginAndRegister = () => {
     const target =
@@ -42,20 +41,22 @@ const Login = () => {
         ? BOARD_STATUS.REGISTER
         : BOARD_STATUS.LOGIN;
     if (target === BOARD_STATUS.REGISTER) {
-      message.warning(`注册请前往ReDawn主站点哦~`);
+      toast({
+        title: "注册提示",
+        description: "注册请前往 ReDawn 主站点哦~",
+      });
     }
     // setBoardStatus(target);
   };
 
   return (
     <div className={styles.pageWrapper}>
-      {contextHolder}
       <h2 className={styles.title}>{textMap[boardStatus].title}</h2>
       <div className={styles.boardWrapper}>
         {boardMap[boardStatus]?.()}
         <div className={styles.buttonWrapper}>
           <Button
-            type="link"
+            variant="link"
             onClick={handleBoardChangeBetweenLoginAndRegister}
           >
             {boardStatus === BOARD_STATUS.LOGIN ? "Sign Up" : "Sign In"}

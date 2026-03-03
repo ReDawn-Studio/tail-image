@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadFile } from "antd";
+import type { UploadFile } from "../upload/types";
 import UploadedImage from "../uploaded-image";
 import styles from "./index.module.css";
 

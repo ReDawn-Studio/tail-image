@@ -2,8 +2,7 @@
 import Image from "next/image";
 import Uploader from "./components/upload";
 import Display from "./components/display";
-import { Avatar, message, Statistic, Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Button } from "@/components/ui/button";
 import { useStore } from "@/app/store";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
@@ -12,7 +11,6 @@ import 'react-photo-view/dist/react-photo-view.css';
 
 
 export default function Home() {
-  const [_, contextHolder] = message.useMessage();
   const store = useStore();
   let userInfo: any = store.user.userInfo;
   const [localUerInfo, setLocalUerInfo] = useState(null);
@@ -26,16 +24,7 @@ export default function Home() {
     userInfo.username = '登录';
   }
   console.log("https://tosuke.top/avater/" + userInfo.avatar);
-  // useEffect(() => {
-  //   const handleUnauthorized = () => {
-  //     router.push("/login");
-  //   };
 
-  //   document.addEventListener("tokenInvalidate", handleUnauthorized);
-  //   return () => {
-  //     document.removeEventListener("tokenInvalidate", handleUnauthorized);
-  //   };
-  // }, [router]);
   const router = useRouter();
   const handleUserInfo = () => {
     if (localUerInfo != null) return;
@@ -44,11 +33,24 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {contextHolder}
       <div className={styles.description}>
         <p>✨ 尾巴图床 ✨</p>
         <div className={styles.userInfo} onClick={handleUserInfo}>
-          <Avatar size={64} icon={<UserOutlined />} src={"https://tosuke.top/avater/" + userInfo.avatar} /><Statistic title="Know as" value={userInfo.username} />
+          <div className={styles.avatar}>
+            {userInfo.avatar ? (
+              <img src={"https://tosuke.top/avater/" + userInfo.avatar} alt={userInfo.username} className={styles.avatarImage} />
+            ) : (
+              <div className={styles.avatarPlaceholder}>
+                <span>{userInfo.username?.charAt(0)?.toUpperCase() || 'U'}</span>
+              </div>
+            )}
+          </div>
+          <div className={styles.userInfoText}>
+            <p className={styles.username}>{userInfo.username}</p>
+            {localUerInfo == null && (
+              <p className={styles.loginHint}>点击登录</p>
+            )}
+          </div>
         </div>
       </div>
 

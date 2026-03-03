@@ -1,14 +1,12 @@
 "use client";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Button, message, Modal, Upload } from "antd";
-import type { GetProp, UploadFile, UploadProps } from "antd";
+import React, { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/use-toast";
 import styles from "./index.module.css";
 import UploadedImageList from "../uploaded-image-list";
 import request from "@/app/util/request";
-import { useStore } from "@/app/store";
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-
-const { Dragger } = Upload;
+import type { UploadFile } from "./types";
 const maxFileSize = 1024 * 1024 * 3; // 3MB
 const validatedFileTypeList = ["image/jpeg", "image/png"];
 
@@ -16,16 +14,16 @@ const Uploader = () => {
   const [fileList, setFileList] = useState<Array<UploadFile>>([]);
   const [uploading, setUploading] = useState(false);
   const [isModalShow, setIsModalShow] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const fileListRef = useRef<Array<UploadFile>>([]); // 因为多文件上传的时候，批处理机制合并了几个任务，导致只有最后一个文件被有效上传
   const fileSizeSumRef = useRef(0);
 
-  const [messageApi] = message.useMessage();
-
   const handleUpload = () => {
     const formData = new FormData();
     fileList.forEach((file) => {
-      formData.append("file[]", file as any);
+      formData.append("file[]", file.file);
     });
     setUploading(true);
     request
@@ -39,87 +37,135 @@ const Uploader = () => {
         if (res.data?.code === 200) {
           setFileList([]);
           fileListRef.current = [];
-          message.success("upload successfully.");
+          fileSizeSumRef.current = 0;
+          toast({ title: "上传成功", description: "图片已上传到服务器。" });
         } else {
-          message.error("服务器出大问题");
+          toast({
+            title: "上传失败",
+            description: "服务器出大问题",
+            variant: "destructive",
+          });
         }
       })
       .catch((err) => {
-        message.error("登录是必要的！");
+        toast({
+          title: "上传失败",
+          description: "登录是必要的！",
+          variant: "destructive",
+        });
       })
       .finally(() => {
         setUploading(false);
       });
   };
 
-  const handlePreview = (e: MouseEvent) => {
-    e.stopPropagation();
+  const handlePreview = (event?: React.MouseEvent<HTMLButtonElement>) => {
+    event?.stopPropagation();
     setIsModalShow(true);
   };
   const handleFileListUpdate = (newFileList: Array<UploadFile>) => {
     fileListRef.current = newFileList;
+    fileSizeSumRef.current = newFileList.reduce(
+      (sum, item) => sum + item.file.size,
+      0
+    );
     setFileList(newFileList);
   };
 
-  const uploadProps: UploadProps = {
-    multiple: true,
-    beforeUpload: (file: File) => {
-      // TODO: 未来还要检查总的存储空间是否足够
-      if (fileSizeSumRef.current > maxFileSize) {
-        messageApi.open({
-          type: "error",
-          content:
-            "The total size of the files exceeds the maximum limit(3MB).",
+  const createUploadFile = (file: File): UploadFile => {
+    const uid =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : String(Date.now() + Math.random());
+    return { uid, file };
+  };
+
+  const addFiles = (files: FileList | File[]) => {
+    const incoming = Array.from(files);
+    let nextList = [...fileListRef.current];
+    let currentSize = fileSizeSumRef.current;
+
+    incoming.forEach((file) => {
+      if (currentSize + file.size > maxFileSize) {
+        toast({
+          title: "文件过大",
+          description: "文件总大小超过 3MB 限制。",
+          variant: "destructive",
         });
-        return true;
-      } else if (!validatedFileTypeList.includes(file.type)) {
-        messageApi.open({
-          type: "error",
-          content: "The selected file type is not allowed.",
-        });
-        return true;
-      } else {
-        handleFileListUpdate([...fileListRef.current as any, file]);
-        return false;
+        return;
       }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
-    showUploadList: false,
-    fileList,
+      if (!validatedFileTypeList.includes(file.type)) {
+        toast({
+          title: "文件类型不支持",
+          description: "仅支持 JPG/PNG 格式。",
+          variant: "destructive",
+        });
+        return;
+      }
+      nextList = [...nextList, createUploadFile(file)];
+      currentSize += file.size;
+    });
+
+    handleFileListUpdate(nextList);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files?.length) return;
+    addFiles(event.target.files);
+    event.target.value = "";
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    if (event.dataTransfer.files?.length) {
+      addFiles(event.dataTransfer.files);
+    }
   };
 
   return (
     <>
-      {/* ant design 的全局提示所需要的： */}
+      <Dialog open={isModalShow && !uploading} onOpenChange={setIsModalShow}>
+        <DialogContent onClose={() => setIsModalShow(false)}>
+          <DialogHeader>
+            <DialogTitle>Pending Upload Images 🎈</DialogTitle>
+          </DialogHeader>
+          <UploadedImageList
+            fileList={fileList}
+            setFileList={handleFileListUpdate}
+          />
+        </DialogContent>
+      </Dialog>
 
-      <Modal
-        footer={null}
-        title={<h4>Pending Upload Images 🎈</h4>}
-        open={isModalShow && !uploading}
-        onOk={() => {
-          setIsModalShow(false);
-        }}
-        onCancel={() => {
-          setIsModalShow(false);
-        }}
+      <div
+        className={`${styles.dropzone} ${isDragging ? styles.dragging : ""}`}
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(event) => event.preventDefault()}
+        onDragEnter={() => setIsDragging(true)}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        role="button"
+        tabIndex={0}
       >
-        <UploadedImageList
-          fileList={fileList}
-          setFileList={handleFileListUpdate}
-        ></UploadedImageList>
-      </Modal>
-      <Dragger {...uploadProps}>
+        <input
+          ref={inputRef}
+          type="file"
+          multiple
+          accept="image/jpeg,image/png"
+          className={styles.fileInput}
+          onChange={handleInputChange}
+        />
         <div className={styles.textWrapper}>
           {fileList.length > 0 ? (
             <div className={styles.uploadedImageWrapper}>
               <h2 className={styles.text}>✨ GOT {fileList.length} FILES ✨</h2>
               <p className={styles.text}>click to add files or preview</p>
               <Button
-                onClick={handlePreview as any}
+                variant="outline"
+                onClick={handlePreview}
                 disabled={fileList.length === 0 || uploading}
                 className={styles.previewButton}
+                type="button"
               >
                 Preview
               </Button>
@@ -134,14 +180,13 @@ const Uploader = () => {
             </div>
           )}
         </div>
-      </Dragger>
+      </div>
       <Button
-        type="primary"
-        size="large"
+        size="lg"
         onClick={handleUpload}
-        disabled={fileList.length === 0}
-        loading={uploading}
+        disabled={fileList.length === 0 || uploading}
         className={styles.confirmButton}
+        type="button"
       >
         {uploading ? "Uploading..." : "Confirm"}
       </Button>

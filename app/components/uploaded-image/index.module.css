@@ -1,24 +1,16 @@
-.ant-upload-list-item {
-  background: red !important;
-}
-
 .itemWrapper {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .itemInfo {
   display: flex;
   width: 100%;
   gap: 8px;
-  .size {
-    font-weight: 700;
-  }
-
-  .name {
-  }
-
-  .textInfo {
-  }
 }
 
 .operations {
@@ -28,4 +20,30 @@
 }
 .text {
   color: rgb(var(--foreground-rgb));
+}
+.previewImageWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+}
+.previewImage {
+  object-fit: cover;
+}
+.textInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.size {
+  font-weight: 600;
+}
+.name {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+}
+.removeButton {
+  color: hsl(var(--muted-foreground));
 }

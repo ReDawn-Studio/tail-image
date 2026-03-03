@@ -1,10 +1,11 @@
 "use client";
 
-import { Button, UploadFile } from "antd";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import styles from "./index.module.css";
-import { useEffect, useRef, useState } from "react";
-import { CloseCircleOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import type { UploadFile } from "../upload/types";
 
 interface UploadedImageProps {
   file: UploadFile;
@@ -14,13 +15,11 @@ interface UploadedImageProps {
 // TODO: 渲染海量数据之后，这个组件要做缓存，不然删除一个元素之后父级元素重绘导致子级元素全部重绘那个开销会很炸裂
 const UploadedImage = (props: UploadedImageProps) => {
   const { file, handleRemove } = props;
-  const urlRef = useRef("");
   const [fileInfo, setFileInfo] = useState<{
     url: string;
     name: string;
     size: string;
   }>();
-  const [previewImageUrl, setPreviewImageUrl] = useState("");
 
   const computeSizeWithUnit = (bytes: number) => {
     if (bytes === 0) return "";
@@ -35,22 +34,15 @@ const UploadedImage = (props: UploadedImageProps) => {
   };
 
   useEffect(() => {
-    if (file instanceof File) {
-      const url = window.URL.createObjectURL(file);
-      // setPreviewImageUrl(url)
-      const name = file.name;
-      const size = computeSizeWithUnit(file.size);
-      const fileInfo = {
-        url,
-        name,
-        size,
-      };
-      setFileInfo(fileInfo);
-    }
+    const fileObject = file.file;
+    if (!(fileObject instanceof File)) return;
+    const url = window.URL.createObjectURL(fileObject);
+    const name = fileObject.name;
+    const size = computeSizeWithUnit(fileObject.size);
+    setFileInfo({ url, name, size });
+
     return () => {
-      if (fileInfo?.url) {
-        window.URL.revokeObjectURL(fileInfo.url);
-      }
+      window.URL.revokeObjectURL(url);
     };
   }, [file]);
 
@@ -61,10 +53,10 @@ const UploadedImage = (props: UploadedImageProps) => {
           <Image
             width={48}
             height={48}
-            objectFit="cover"
+            style={{ objectFit: "cover" }}
             className={styles.previewImage}
             src={fileInfo?.url || ""}
-            alt={file.name}
+            alt={fileInfo?.name || ""}
           ></Image>
         </div>
         <div className={styles.textInfo}>
@@ -76,11 +68,13 @@ const UploadedImage = (props: UploadedImageProps) => {
       <div className={styles.operations}>
         <Button
           onClick={handleRemove}
-          type="link"
-          danger
-          icon={<CloseCircleOutlined />}
-          size="large"
-        />
+          variant="ghost"
+          size="icon"
+          className={styles.removeButton}
+          type="button"
+        >
+          <X className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

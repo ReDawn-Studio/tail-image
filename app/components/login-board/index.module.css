@@ -6,3 +6,34 @@
 .text {
   color: rgb(var(--foreground-rgb));
 }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.label {
+  color: hsl(var(--foreground));
+}
+.input {
+  width: 100%;
+}
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.checkboxLabel {
+  font-size: 0.875rem;
+}
+.error {
+  color: hsl(var(--destructive));
+  font-size: 0.875rem;
+}
+.submitButton {
+  width: 100%;
+}

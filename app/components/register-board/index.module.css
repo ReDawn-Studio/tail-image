@@ -1,8 +1,25 @@
 .center {
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
 }
 
 .text {
   color: rgb(var(--foreground-rgb));
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.label {
+  color: hsl(var(--foreground));
+}
+.input {
+  width: 100%;
 }

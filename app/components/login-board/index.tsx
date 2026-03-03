@@ -1,84 +1,106 @@
 "use client";
-import React from "react";
-import type { FormProps } from "antd";
-import { Button, Checkbox, Form, Input } from "antd";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import styles from "./index.module.css";
 import request from "@/app/util/request";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/app/store";
 
-const { Item } = Form;
-const { Password } = Input;
-
-type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-};
-
 const LoginBoard = () => {
   const router = useRouter();
   const store = useStore();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    remember: true,
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const onFinish: FormProps<FieldType>["onFinish"] = async (
-    values: FieldType
-  ) => {
-    const res = await request.post("api/login", values);
-    if (res.data.status === 200) {
-      // TODO: 要考虑下密码错误的情况，后面我们要单独处理写个文件放所有的枚举
-      store.user.setUserInfo({ ...res.data.data });
-      localStorage.setItem('user',JSON.stringify({ ...res.data.data.userInfo }));
-      router.push("/");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await request.post("api/login", formData);
+      if (res.data.status === 200) {
+        store.user.setUserInfo({ ...res.data.data });
+        localStorage.setItem('user', JSON.stringify({ ...res.data.data.userInfo }));
+        router.push("/");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "登录失败，请检查用户名和密码");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
-    console.log("Failed:", errorInfo);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   return (
-    <Form
-      layout="vertical"
-      name="login"
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-    >
-      <Item<FieldType>
-        label={<div className={styles.text}>Username</div>}
-        name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}
-      >
-        <Input className={styles.input} />
-      </Item>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.formItem}>
+        <Label htmlFor="username" className={styles.label}>Username</Label>
+        <Input
+          id="username"
+          name="username"
+          type="text"
+          value={formData.username}
+          onChange={handleInputChange}
+          placeholder="请输入用户名"
+          required
+          className={styles.input}
+        />
+      </div>
 
-      <Item<FieldType>
-        label={<div className={styles.text}>Password</div>}
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Password className={styles.input} />
-      </Item>
+      <div className={styles.formItem}>
+        <Label htmlFor="password" className={styles.label}>Password</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          placeholder="请输入密码"
+          required
+          className={styles.input}
+        />
+      </div>
 
-      <Item<FieldType>
-        name="remember"
-        valuePropName="checked"
-        className={styles.center}
-      >
-        <Checkbox>
-          <div className={styles.text}>Remember me</div>
-        </Checkbox>
-      </Item>
+      <div className={styles.formItem}>
+        <div className={styles.checkboxRow}>
+          <Checkbox
+            id="remember"
+            name="remember"
+            checked={formData.remember}
+            onCheckedChange={(checked) =>
+              setFormData((prev) => ({ ...prev, remember: Boolean(checked) }))
+            }
+          />
+          <Label htmlFor="remember" className={styles.checkboxLabel}>
+            Remember me
+          </Label>
+        </div>
+      </div>
 
-      <Item className={styles.center}>
-        <Button type="primary" htmlType="submit">
-          Sign In
+      {error && <div className={styles.error}>{error}</div>}
+
+      <div className={styles.formItem}>
+        <Button type="submit" className={styles.submitButton} disabled={loading}>
+          {loading ? "登录中..." : "Sign In"}
         </Button>
-      </Item>
-    </Form>
+      </div>
+    </form>
   );
 };
 
