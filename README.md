@@ -29,29 +29,43 @@
 
 ## 🛠️ 开发
 
+**推荐使用 pnpm**（更快、更节省磁盘空间）
+
 ```bash
+# 安装 pnpm（如果未安装）
+npm install -g pnpm
+
 # 安装依赖
-npm install
+pnpm install
 
 # 运行开发服务器
-npm run dev
+pnpm run dev
 
 # 构建生产版本
-npm run build
+pnpm run build
 
 # 启动生产服务器
-npm start
+pnpm start
 
 # 代码检查
-npm run lint
-npm run lint:fix
+pnpm run lint
+pnpm run lint:fix
 
 # 格式化代码
-npm run format
+pnpm run format
 
 # 类型检查
-npm run type-check
+pnpm run type-check
 ```
+
+### CI/CD
+
+项目配置了 GitHub Actions，每次 push 和 PR 会自动：
+- ✅ 安装依赖 (pnpm)
+- ✅ Lint 检查
+- ✅ TypeScript 类型检查
+- ✅ 构建验证
+- ✅ 上传构建产物
 
 ## 📁 项目结构
 
