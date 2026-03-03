@@ -16,13 +16,9 @@ const connectDatabase = async () => {
 const executeSql = async (sql: string, valueList: Array<any>) => {
   const connection = await connectDatabase();
   // console.log('链接数据库', connection,process.env.DB_HOST);
-  try {
-    const [results] = await connection.execute(sql, valueList);
-    connection.end();
-    return results;
-  } catch (error) {
-    throw error;
-  }
+  const [results] = await connection.execute(sql, valueList);
+  connection.end();
+  return results;
 };
 
 export default executeSql;
